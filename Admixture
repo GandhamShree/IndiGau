@@ -1,0 +1,43 @@
+# ld pruning of markers 0.5 together and running admixture to calculate Q and P
+# Running admixture
+#!/bin/bash
+#SBATCH --job-name="admixture_test"   #name of this job
+#SBATCH -partition=short              #name of the partition (queue) you are submitting to
+#SBATCH -N 1                  #number of nodes in this job
+#SBATCH -n 40                 #number of cores/tasks in this job, you get all 20 physical cores with 2 threads per core with hyper-threading
+#SBATCH --mem=350G
+#SBATCH --mail-user=email address   #enter your email address to receive emails
+#SBATCH --mail-type=BEGIN,END,FAIL #will receive an email when job starts, ends or fails
+#SBATCH -o "stdout.%j.%N"     # standard output, %j adds job number to output file name and %N adds the node name
+#SBATCH -e "stderr.%j.%N"     #optional, prints our standard error
+date                          #optional, prints out timestamp at the start of the job in stdout file
+module load admixture         #loading latest admixture
+for K in 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50; \
+do admixture -s 00001 --cv allbreeds_1527_autosomes_0.5.bed $K | tee log${K}.out; done
+date                          #optional, prints out timestamp when the job ends
+#End of file
+
+Plotting in R
+#setworking directory
+setwd("C:/Users/mahesh.neupane/OneDrive - USDA/August_2023/admixture_autosomes")
+ad9 <- read.table("allbreeds_1527autsomes_allmarkers.2.Q")
+popmap <- read.table("ids.txt", col.names = c("sample", "popnum", "popname"))
+ad9 <- cbind(popmap, ad9)
+ad9 <- ad9[order(ad9$popname), ]
+barplot(t(as.matrix(ad9[, -1:-3])), col=rainbow(5),
+        space = 0, xlab="Population", ylab = "Ancestry",
+        border=NA, axisnames = FALSE)
+barplot(t(as.matrix(ad9[, -1:-3])), col=rainbow(5),
+        space = 0, xlab="Population", ylab = "Ancestry",
+        border=NA, axisnames = FALSE)
+xlabels <- aggregate(1:nrow(ad9),
+                     by = list(ad9[, "popname"]),
+                     FUN = mean)
+sampleEdges <- aggregate(1:nrow(ad9),
+                         by = list(ad9[, "popname"]),
+                         FUN = max)
+barplot(t(as.matrix(ad9[, -1:-3])), col = c( "cyan2", "darkorange", "darkgoldenrod4", "forestgreen", "brown3", "green", "cyan4", "red1", "yellow3", "skyblue4","magenta"),
+        space = 0,  ylab = "Ancestry",
+        border=NA, axisnames = FALSE)
+abline(v = sampleEdges$x, lwd = 1)
+axis(1, at = xlabels$x - 0.5, las = 2, labels = xlabels$Group.1, cex.axis=0.7)
