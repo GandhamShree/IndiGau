@@ -10,7 +10,7 @@ One representative script per analysis/plot type used in the manuscript, organiz
 `Admixture` | Scripts for ADMIXTURE analysis and visualization |
 `BovineHapmapPCAplots` | Scripts for principal component analysis (PCA) of cattle populations |
 `EFFECTIVEpopulaationsize` | Scripts for estimating effective population size (Ne) |
-
+`Corr_MAE_RMSE_CI.R` | Multi-panel heatmap of Pearson's r, 95% CI, p-value, RMSE, and MAE for Vechur vs other cattle breeds |
 ## 02_Genome-wide_Selection_Manhattan_QQ/
 `GWAS_Manhattan_QQplot.R` | GWAS/selection-scan Manhattan plot with QQ plot |
 
